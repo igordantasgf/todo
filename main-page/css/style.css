@@ -1,0 +1,143 @@
+*{
+  padding: 0;
+  margin: 0;
+  font-family: Helvetica;
+  color: #333;
+  box-sizing: border-box;
+}
+
+button{
+  border: 2px solid #fff;
+  padding: .0rem .0rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: 0.4;
+}
+
+
+/* Cabeçalho */
+
+.todo-container{
+  max-width: 450px;
+  margin: 3rem auto 0;
+  background-color: #e1e1e1;
+  padding: 1.5rem;
+  border-radius: 15px;
+}
+
+.todo-container header{
+  text-align: center;
+  padding: 0 1.0rem 1rem;
+}
+
+#todo-form{
+  margin-block: 15px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #333;
+}
+
+#todo-form p{
+  margin: .5rem;
+}
+
+.form-control{
+  display: grid;
+  position: relative; /* Added */
+}
+
+.form-control input{
+  text-align: start;
+  border: hidden;
+  border-radius: 5px;
+  padding: .3rem;
+  padding-left: 1rem;
+  padding-right: 3rem;
+  margin-right: 0.3rem;
+}
+
+.form-control input:focus{
+  outline: none;
+}
+
+.form-control button{
+  display: flex;
+  width: 1.4rem;
+  height: 1rem;
+  left: 90%;
+  border: 0;
+  border-radius: 4px;
+  color: white;
+  position: absolute; /* Changed */
+  right: 0; /* Changed */
+  bottom: 15%; /* Changed */
+}
+
+.form-control button:hover{
+  transition: ease-out .2s;
+  width: 1.6rem;
+  height: 1.2rem;
+  bottom: 10%; /* Changed */
+}
+
+/* Itens TODO */
+
+.todo{
+  display: flex; 
+  justify-content:space-between;
+  align-items: center; 
+  padding-top: .7rem;
+  padding-bottom: .7rem;
+  margin-block: .5rem;
+  border-radius: 0.3rem;
+  border-bottom: 1px solid rgba(87, 87, 87, 0.3);
+}
+
+.todo h3{
+  font-family: Helvetica;
+  font-style: normal;
+  font-size: 13px;
+  margin: 0;
+}
+
+/* botão Progress */
+.state-todo{
+  border: hidden;
+  border-radius: 15px;
+  padding: 5px 10px;
+}
+
+.state-todo:hover{
+  transition: ease-out .2s;
+  padding: 6px 11px;
+}
+
+.progress{
+  background-color: #ffcb46;
+  margin-right: -30%;
+}
+
+.done{
+  background-color: #80e265;
+  margin-right: -45%;
+}
+
+
+/* Botão remove */
+.remove-todo{
+  border: none;
+  background-color: transparent;
+}
+
+.remove-todo:hover {
+  background-color: #f00;
+  border: hidden;
+  border-radius: 20px;
+  transition-duration: 0.3s;
+}
+
+.remove-todo:hover > i{
+  color: #fff;
+  border-radius: 2px;
+}
