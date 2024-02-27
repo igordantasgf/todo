@@ -33,6 +33,7 @@ button{
 }
 
 #todo-form{
+  display: grid;
   margin-block: 15px;
   padding-bottom: 15px;
   border-bottom: 1px solid #333;
@@ -81,15 +82,44 @@ button{
   bottom: 10%; /* Changed */
 }
 
+/*Filtro de itens*/
+
+#todo-filter{
+  display: flex;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  border-bottom: #333 solid 1px;
+}
+
+.todo-filter p{
+  margin-right: 10px;
+}
+
+.state-filter{
+  border-radius: 15px;
+  border: hidden;
+  margin-left: 10px;
+  padding-inline: 10px;
+}
+
+.progressfilter:hover{
+  background-color:#ffcb46;
+}
+
+.donefilter:hover{
+  background-color: #80e265;
+}
+
 /* Itens TODO */
 
 .todo{
-  display: flex; 
+  display:flex; 
   justify-content:space-between;
   align-items: center; 
-  padding-top: .7rem;
-  padding-bottom: .7rem;
+  padding-top: 1.2rem;
+  padding-bottom: 1.2rem;
   margin-block: .5rem;
+  margin-left: auto;
   border-radius: 0.3rem;
   border-bottom: 1px solid rgba(87, 87, 87, 0.3);
 }
@@ -99,6 +129,7 @@ button{
   font-style: normal;
   font-size: 13px;
   margin: 0;
+  flex-grow: 1;
 }
 
 /* botão Progress */
@@ -106,6 +137,9 @@ button{
   border: hidden;
   border-radius: 15px;
   padding: 5px 10px;
+  width: 100px;
+  white-space: nowrap;
+  margin-right: 5px;
 }
 
 .state-todo:hover{
@@ -115,12 +149,12 @@ button{
 
 .progress{
   background-color: #ffcb46;
-  margin-right: -30%;
+  width: 110px;
 }
 
 .done{
   background-color: #80e265;
-  margin-right: -45%;
+  width: 60px;
 }
 
 
@@ -128,6 +162,7 @@ button{
 .remove-todo{
   border: none;
   background-color: transparent;
+  position: relative;
 }
 
 .remove-todo:hover {
@@ -141,3 +176,9 @@ button{
   color: #fff;
   border-radius: 2px;
 }
+
+.state-todo,
+.done {
+  margin-left: 10px; /* Add a margin between the buttons */
+}
+
