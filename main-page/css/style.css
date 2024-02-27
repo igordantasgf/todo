@@ -140,11 +140,7 @@ button{
   width: 100px;
   white-space: nowrap;
   margin-right: 5px;
-}
-
-.state-todo:hover{
   transition: ease-out .2s;
-  padding: 6px 11px;
 }
 
 .progress{

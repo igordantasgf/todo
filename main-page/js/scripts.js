@@ -29,6 +29,43 @@ const saveTodo = (text) =>{
   todoInput.focus()
 };
 
+const switchState = (button, text) =>{
+  console.log(text);
+  switch(text){
+    case "progress":
+      button.classList.replace('progress','done');
+      button.innerText = 'Pronto';
+      break
+    case  "done":
+      button.classList.replace('done','progress');
+      button.innerText = 'Em progresso';
+      break;
+  }
+}
+
+const filterTodo = (button, text) =>{
+  const todoItems = todoList.querySelectorAll('.todo');
+  text = text.replace('filter', '');
+
+  switch(text){
+    case 'progress':
+      
+  }
+  
+
+  //seleção de itens
+  todoItems.forEach(item => {
+    stateBtn = item.querySelector('.state-todo');
+    console.log("State do botao:", stateBtn.classList[1]);
+    if(stateBtn.classList[1] == text){
+      item.style.display = 'flex';
+    } else {
+      item.style.display = 'none';
+    }
+
+  });
+}
+
 //Eventos
 todoForm.addEventListener("submit", (e) => {
   e.preventDefault();
@@ -40,5 +77,25 @@ todoForm.addEventListener("submit", (e) => {
   }
 });
 
+document.addEventListener("click", (e)=>{
+  const targetEl = e.target
+  const parentEl = targetEl.closest("div");
+
+  if(targetEl.closest('.remove-todo')){
+    parentEl.remove();
+  }
+
+  // Mudança do estado da tarefa
+  if(targetEl.closest('.state-todo')){
+    let btnState = targetEl.classList[1];
+    switchState(targetEl, btnState);
+  }
+
+  if(targetEl.closest('.state-filter')){
+    let btnState = targetEl.classList[1];
+    filterTodo(targetEl, btnState)
+  }
+
+})
 
 
