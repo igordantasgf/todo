@@ -3,6 +3,7 @@ const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
 const todoFilter = document.querySelector("#todo-filter");
 const todoList = document.querySelector("#todo-list");
+let filterState = NaN;
 
 //Funções
 const saveTodo = (text) =>{
@@ -46,24 +47,41 @@ const switchState = (button, text) =>{
 const filterTodo = (button, text) =>{
   const todoItems = todoList.querySelectorAll('.todo');
   text = text.replace('filter', '');
+  buttonList = document.querySelectorAll('.state-filter');
 
-  switch(text){
-    case 'progress':
-      
+  console.log('switch: ',text);
+  if(filterState == text){
+    button.style.backgroundColor = "#ffffff";
+  }else{
+    switch(text){
+      case "progress":
+        button.style.backgroundColor = "#ffcb46";
+        buttonList[1].style.backgroundColor = "#ffffff";
+        break;
+      case "done":
+        button.style.backgroundColor = "#80e265";
+        buttonList[0].style.backgroundColor = "#ffffff";
+        break;
+      }
   }
-  
 
-  //seleção de itens
-  todoItems.forEach(item => {
-    stateBtn = item.querySelector('.state-todo');
-    console.log("State do botao:", stateBtn.classList[1]);
-    if(stateBtn.classList[1] == text){
+  if(filterState == text){
+    todoItems.forEach(item => {
       item.style.display = 'flex';
-    } else {
-      item.style.display = 'none';
-    }
-
-  });
+    });
+    filterState = NaN;
+  }else{
+    todoItems.forEach(item => {
+      stateBtn = item.querySelector('.state-todo');
+      if(stateBtn.classList[1] == text){
+        item.style.display = 'flex';
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    filterState = text;
+  }
+  console.log("filterState: ",filterState);
 }
 
 //Eventos
