@@ -1,3 +1,5 @@
+API_IP = process.env.API_IP
+
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
@@ -107,7 +109,7 @@ function findValueWithKey(dictionary, targetKey) {
 
 // API Calls
 const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
-  fetch('http://127.0.0.1:8000/mensagens')
+  fetch(`${API_IP}/mensagens`)
     .then(response => response.json())
     .then(data => {
       mensagens = data.mensagens;
@@ -119,7 +121,7 @@ const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
 };
 
 const fectchAndInsertTodo = (text) => {//inserir novo todo no bd
-  fetch('http://127.0.0.1:8000/mensagens', {
+  fetch(`${API_IP}/mensagens`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -137,7 +139,7 @@ const fectchAndInsertTodo = (text) => {//inserir novo todo no bd
 };
 
 const fetchAndUpdateStatus = (id, newStatus) => {
-  fetch(`http://127.0.0.1:8000/mensagens/${id}/status`, {
+  fetch(`${API_IP}/mensagens/${id}/status`, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -157,7 +159,7 @@ const fetchAndUpdateStatus = (id, newStatus) => {
 
 const fetchAndDeleteTodo = (message) => {//remover um todo do bd
   id = findValueWithKey(currentTodo, message);
-  fetch(`http://127.0.0.1:8000/mensagens/${id}`, {
+  fetch(`${API_IP}/mensagens/${id}`, {
     method: 'DELETE',
   })
   .then(response => {
