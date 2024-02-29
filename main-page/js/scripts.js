@@ -1,4 +1,5 @@
-const API_IP = 'https://'+ '<%= process.env.API_URL %>';
+const API_IP = window.apiUrl;
+console.log(API_IP);
 
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
