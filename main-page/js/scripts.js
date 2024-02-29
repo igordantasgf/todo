@@ -1,4 +1,4 @@
-const API_IP = "todo-api-kohl-tau.vercel.app";
+const API_IP = 'https://'+ '<%= process.env.API_URL %>';
 
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
@@ -109,7 +109,7 @@ function findValueWithKey(dictionary, targetKey) {
 
 // API Calls
 const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
-  const endIp = 'https://'+API_IP+'/mensagens'
+  const endIp = API_IP+'/mensagens'
   console.log(endIp);
   fetch(endIp)
     .then(response => response.json())
