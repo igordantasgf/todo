@@ -1,5 +1,4 @@
-const API_IP = window.apiUrl;
-console.log(API_IP);
+const API_IP = 'https://'+ 'todo-api-kohl-tau.vercel.app';
 
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
