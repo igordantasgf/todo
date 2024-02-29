@@ -1,10 +1,10 @@
 from config import db
 
-# models
+# Modelo de todo
 class Todo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     message = db.Column(db.String(50))
-    status = db.Column(db.String(20))  # Assuming status can be represented as a string
+    status = db.Column(db.String(20))
 
     def to_json(self):
         return {

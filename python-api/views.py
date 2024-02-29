@@ -16,7 +16,7 @@ def seleciona_mensagens():
 @app.route("/mensagens", methods=["POST"])
 def insere_mensagem():
     data = request.get_json()
-    message = data.get('message')
+    message = data.get('message') # Exige request  com o JSON {"message": "Mensagem"}
 
     if not message:
         return gera_response(400, "mensagem não fornecida", None)
@@ -33,7 +33,7 @@ def insere_mensagem():
 @app.route("/mensagens/<int:id>/status", methods=["PUT"])
 def atualiza_status(id):
     data = request.get_json()
-    new_status = data.get('status')
+    new_status = data.get('status')# Exige request com o JSON  {"status":"Pronto"}
 
     if not new_status:
         return gera_response(400, "novo status não fornecido", None)
