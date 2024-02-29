@@ -109,7 +109,7 @@ function findValueWithKey(dictionary, targetKey) {
 
 // API Calls
 const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
-  const endIp = API_IP+'mensagens'
+  const endIp = 'https://'+API_IP+'/mensagens'
   console.log(endIp);
   fetch(endIp)
     .then(response => response.json())
