@@ -1,5 +1,4 @@
-const API_IP = 'todo-api-kohl-tau.vercel.app';
-console.log(`${API_IP}/mensagens`);
+const API_IP = "todo-api-kohl-tau.vercel.app";
 
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
@@ -110,7 +109,8 @@ function findValueWithKey(dictionary, targetKey) {
 
 // API Calls
 const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
-  fetch(`${API_IP}/mensagens`)
+  const endIp = API_IP+'mensagens'
+  fetch(endIp)
     .then(response => response.json())
     .then(data => {
       mensagens = data.mensagens;
@@ -122,7 +122,8 @@ const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
 };
 
 const fectchAndInsertTodo = (text) => {//inserir novo todo no bd
-  fetch(`${API_IP}/mensagens`, {
+  const endIp = API_IP+'/mensagens';
+  fetch(endIp, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -140,7 +141,8 @@ const fectchAndInsertTodo = (text) => {//inserir novo todo no bd
 };
 
 const fetchAndUpdateStatus = (id, newStatus) => {
-  fetch(`${API_IP}/mensagens/${id}/status`, {
+  const endIp = API_IP+'/mensagens/'+String(id)+'/status'
+  fetch(endIp, {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
@@ -160,7 +162,8 @@ const fetchAndUpdateStatus = (id, newStatus) => {
 
 const fetchAndDeleteTodo = (message) => {//remover um todo do bd
   id = findValueWithKey(currentTodo, message);
-  fetch(`${API_IP}/mensagens/${id}`, {
+  const endIp = API_IP+'/mensagens/'+String(id)
+  fetch(endIp, {
     method: 'DELETE',
   })
   .then(response => {
