@@ -1,15 +1,19 @@
+// declaração explícita do API
 const API_IP = 'https://'+ 'todo-api-kohl-tau.vercel.app';
 
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
 const todoInput = document.querySelector("#todo-input");
-const todoFilter = document.querySelector("#todo-filter");
 const todoList = document.querySelector("#todo-list");
-let filterState = NaN;
-var currentTodo = Object.create(null);
+let filterState = NaN; // Estado atual do filtro
+var currentTodo = Object.create(null); // Armazenamento em memória dos TODO's atuais
 
+
+//
 //Funções
-const saveTodo = (text, status, id) =>{
+//__________________________________________________________________________________//
+
+const saveTodo = (text, status, id) =>{// Salvar TODO no display
   const todo = document.createElement("div");
   todo.classList.add("todo");
 
@@ -43,14 +47,14 @@ const saveTodo = (text, status, id) =>{
   todoInput.focus()
 };
 
-const switchState = (button, text, message) =>{
+const switchState = (button, text, message) =>{ // Alterar estado do TODO
   id = findValueWithKey(currentTodo, message);
   switch(text){
     case "progress":
       button.classList.replace('progress','done');
       button.innerText = 'Pronto';
       currentTodo[id] = ([message, 'Pronto']);
-      fetchAndUpdateStatus(id,'Pronto');
+      fetchAndUpdateStatus(id,'Pronto'); // Atualização no BD via API
       break
     case  "done":
       button.classList.replace('done','progress');
@@ -61,12 +65,12 @@ const switchState = (button, text, message) =>{
   }
 }
 
-const filterTodo = (button, text) =>{
+const filterTodo = (button, text) =>{ // Filtrando display por status dos TODO's
   const todoItems = todoList.querySelectorAll('.todo');
   text = text.replace('filter', '');
   buttonList = document.querySelectorAll('.state-filter');
 
-  if(filterState == text){
+  if(filterState == text){// Modificação de botões de filtro
     button.style.backgroundColor = "#ffffff";
   }else{
     switch(text){
@@ -81,7 +85,7 @@ const filterTodo = (button, text) =>{
       }
   }
 
-  if(filterState == text){
+  if(filterState == text){// Modificação do display
     todoItems.forEach(item => {
       item.style.display = 'flex';
     });
@@ -99,7 +103,7 @@ const filterTodo = (button, text) =>{
   }
 }
 
-function findValueWithKey(dictionary, targetKey) {
+function findValueWithKey(dictionary, targetKey) {// função extra para achar valores no dicionario
   for (const[key, value] of Object.entries(dictionary)) {
     if(dictionary[key][0].trim() === targetKey.trim()){
       return key
@@ -107,17 +111,21 @@ function findValueWithKey(dictionary, targetKey) {
   };
 }
 
+
+//
 // API Calls
-const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
+//__________________________________________________________________________________//
+
+const fetchAndDisplayTodos = () => {// display de todos os TODO's do bd
   const endIp = API_IP+'/mensagens'
   console.log(endIp);
   fetch(endIp)
     .then(response => response.json())
     .then(data => {
       mensagens = data.mensagens;
-      mensagens.forEach(mensagem => {
+      mensagens.forEach(mensagem => {// para cada item no JSON, convoca a função básica de criar um TODO
         saveTodo(mensagem.message, mensagem.status, mensagem.id);
-      });
+      });// ps: ao contrário da inserção normal, o status "Em progresso" não é padrão, então é dado como parâmetro pra função
     })
     .catch(error => console.error('Error:', error));
 };
@@ -141,7 +149,7 @@ const fectchAndInsertTodo = (text) => {//inserir novo todo no bd
   .catch(error => console.error('Error:', error));
 };
 
-const fetchAndUpdateStatus = (id, newStatus) => {
+const fetchAndUpdateStatus = (id, newStatus) => {//Atualização do status de um TODO no BD
   const endIp = API_IP+'/mensagens/'+String(id)+'/status'
   fetch(endIp, {
     method: 'PUT',
@@ -161,7 +169,7 @@ const fetchAndUpdateStatus = (id, newStatus) => {
   .catch(error => console.error('Error:', error));
 };
 
-const fetchAndDeleteTodo = (message) => {//remover um todo do bd
+const fetchAndDeleteTodo = (message) => {// Remover um TODO do BD
   id = findValueWithKey(currentTodo, message);
   const endIp = API_IP+'/mensagens/'+String(id)
   fetch(endIp, {
@@ -176,13 +184,15 @@ const fetchAndDeleteTodo = (message) => {//remover um todo do bd
   .catch(error => console.error('Error:', error));
 };
 
+//
+// Eventos
+//__________________________________________________________________________________//
 
-//Eventos
-document.addEventListener("DOMContentLoaded", () => {
-  fetchAndDisplayTodos();
+document.addEventListener("DOMContentLoaded", () => {// Ação ao incializar a página: 
+  fetchAndDisplayTodos(); // consulta + display de todos os TODO's no BD
 });
 
-todoForm.addEventListener("submit", (e) => {//inserir todo
+todoForm.addEventListener("submit", (e) => {// Inserir TODO no display
   e.preventDefault();
 
   const inputValue = todoInput.value;
@@ -197,20 +207,20 @@ document.addEventListener("click", (e)=>{//ações de click
   const targetEl = e.target
   const parentEl = targetEl.closest("div");
 
-  if(targetEl.closest('.remove-todo')){
+  if(targetEl.closest('.remove-todo')){ // Botão de remover TODO
     var message = parentEl.innerText;
-    parentEl.remove();
+    parentEl.remove(); // remoção visual
     fetchAndDeleteTodo(message.replace("Em progresso", '').replace("Pronto", ''));
   }
 
-  if(targetEl.closest('.state-todo')){
+  if(targetEl.closest('.state-todo')){// Mudança do estado do TODO
     let btnState = targetEl.classList[1];
     const todoDiv = targetEl.closest('.todo');
     const h3Element = todoDiv.querySelector('h3').textContent;
     switchState(targetEl, btnState, h3Element);
   }
 
-  if(targetEl.closest('.state-filter')){
+  if(targetEl.closest('.state-filter')){// Filtro de TODO's por status
     let btnState = targetEl.classList[1];
     filterTodo(targetEl, btnState)
   }
