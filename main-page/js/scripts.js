@@ -4,9 +4,10 @@ const todoInput = document.querySelector("#todo-input");
 const todoFilter = document.querySelector("#todo-filter");
 const todoList = document.querySelector("#todo-list");
 let filterState = NaN;
+var currentTodo = Object.create(null);
 
 //Funções
-const saveTodo = (text) =>{
+const saveTodo = (text, status, id) =>{
   const todo = document.createElement("div");
   todo.classList.add("todo");
 
@@ -15,10 +16,16 @@ const saveTodo = (text) =>{
   todo.appendChild(todoTitle)
 
   const progressBtn = document.createElement('button')
-  progressBtn.classList.add('state-todo', 'progress')
-  progressBtn.innerText = 'Em progresso'
-  todo.appendChild(progressBtn)
-
+  if (status=="Em progresso"){
+    progressBtn.classList.add('state-todo', 'progress')
+    progressBtn.innerText = 'Em progresso'
+    todo.appendChild(progressBtn)
+  }else{
+    progressBtn.classList.add('state-todo', 'done')
+    progressBtn.innerText = 'Pronto'
+    todo.appendChild(progressBtn)
+  }
+  
   const removeBtn = document.createElement('button')
   removeBtn.classList.add('remove-todo')
   removeBtn.innerHTML = '<i class="fa-regular fa-circle-xmark"></i>'
@@ -26,20 +33,28 @@ const saveTodo = (text) =>{
 
   todoList.appendChild(todo)
 
+  if(id!=0){ 
+    currentTodo[id] = ([text, status]);
+  }
+
   todoInput.value = ''
   todoInput.focus()
 };
 
-const switchState = (button, text) =>{
-  console.log(text);
+const switchState = (button, text, message) =>{
+  id = findValueWithKey(currentTodo, message);
   switch(text){
     case "progress":
       button.classList.replace('progress','done');
       button.innerText = 'Pronto';
+      currentTodo[id] = ([message, 'Pronto']);
+      fetchAndUpdateStatus(id,'Pronto');
       break
     case  "done":
       button.classList.replace('done','progress');
       button.innerText = 'Em progresso';
+      currentTodo[id] = ([message, 'Em progresso']);
+      fetchAndUpdateStatus(id,'Em progresso');
       break;
   }
 }
@@ -49,7 +64,6 @@ const filterTodo = (button, text) =>{
   text = text.replace('filter', '');
   buttonList = document.querySelectorAll('.state-filter');
 
-  console.log('switch: ',text);
   if(filterState == text){
     button.style.backgroundColor = "#ffffff";
   }else{
@@ -81,32 +95,112 @@ const filterTodo = (button, text) =>{
     });
     filterState = text;
   }
-  console.log("filterState: ",filterState);
 }
 
+function findValueWithKey(dictionary, targetKey) {
+  for (const[key, value] of Object.entries(dictionary)) {
+    if(dictionary[key][0].trim() === targetKey.trim()){
+      return key
+    }
+  };
+}
+
+// API Calls
+const fetchAndDisplayTodos = () => {// display de todos os todo's do bd
+  fetch('http://127.0.0.1:8000/mensagens')
+    .then(response => response.json())
+    .then(data => {
+      mensagens = data.mensagens;
+      mensagens.forEach(mensagem => {
+        saveTodo(mensagem.message, mensagem.status, mensagem.id);
+      });
+    })
+    .catch(error => console.error('Error:', error));
+};
+
+const fectchAndInsertTodo = (text) => {//inserir novo todo no bd
+  fetch('http://127.0.0.1:8000/mensagens', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      message: text,
+    }),
+  })
+  .then(response => response.json())
+  .then(data => {
+    atributos = data.inserido;
+    currentTodo[atributos.id] = ([atributos.message, atributos.status])
+  })
+  .catch(error => console.error('Error:', error));
+};
+
+const fetchAndUpdateStatus = (id, newStatus) => {
+  fetch(`http://127.0.0.1:8000/mensagens/${id}/status`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      status: newStatus
+    }),
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to update TODO status');
+    }
+    
+  })
+  .catch(error => console.error('Error:', error));
+};
+
+const fetchAndDeleteTodo = (message) => {//remover um todo do bd
+  id = findValueWithKey(currentTodo, message);
+  fetch(`http://127.0.0.1:8000/mensagens/${id}`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (!response.ok) {
+      throw new Error('Failed to delete TODO item');
+    }
+    delete currentTodo[id];
+  })
+  .catch(error => console.error('Error:', error));
+};
+
+
 //Eventos
-todoForm.addEventListener("submit", (e) => {
+document.addEventListener("DOMContentLoaded", () => {
+  fetchAndDisplayTodos();
+});
+
+todoForm.addEventListener("submit", (e) => {//inserir todo
   e.preventDefault();
 
   const inputValue = todoInput.value;
 
   if(inputValue){//salvar todo
-    saveTodo(inputValue);
+    saveTodo(inputValue, "Em progresso", 0);
+    fectchAndInsertTodo(inputValue);
   }
 });
 
-document.addEventListener("click", (e)=>{
+document.addEventListener("click", (e)=>{//ações de click
   const targetEl = e.target
   const parentEl = targetEl.closest("div");
 
   if(targetEl.closest('.remove-todo')){
+    var message = parentEl.innerText;
     parentEl.remove();
+    fetchAndDeleteTodo(message.replace("Em progresso", '').replace("Pronto", ''));
   }
 
-  // Mudança do estado da tarefa
   if(targetEl.closest('.state-todo')){
     let btnState = targetEl.classList[1];
-    switchState(targetEl, btnState);
+    const todoDiv = targetEl.closest('.todo');
+    const h3Element = todoDiv.querySelector('h3').textContent;
+    switchState(targetEl, btnState, h3Element);
   }
 
   if(targetEl.closest('.state-filter')){
