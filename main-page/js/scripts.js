@@ -1,5 +1,6 @@
 // declaração explícita do API
 const API_IP = 'https://'+ 'todo-api-kohl-tau.vercel.app';
+// const API_IP = 'http://localhost:8000'
 
 // Seleção de elementos
 const todoForm = document.querySelector("#todo-form");
